@@ -1,4 +1,6 @@
-# Homework 02
+# Homework 02: Mars Meteor Site Generator
+
+Scenario: You are operating a robotic vehicle on Mars and the task for today is to investigate five meteorite landing sites in Syrtis Major.
 
 This purpose of this project is to generate random meteor sites on mars and calculate the amount of time a rover would take to collect samples from said sites
 
