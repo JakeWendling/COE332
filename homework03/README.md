@@ -2,6 +2,8 @@
 
 Scenario: Your robot has finished collecting its five meteorite samples and has taken them back to the Mars lab for analysis. In order to analyze the samples, however, you need clean water. You must check the latest water quality data to assess whether it is safe to analyze samples, or if the Mars lab should go on a boil water notice.
 
+The data used in this program can be found at [this link](https://raw.githubusercontent.com/wjallen/turbidity/main/turbidity_data.json). This data contains a dictionary of water samples that contain the date and time, sample volume, calibration constant, detector current, and the name of the person who analyzed the sample.
+
 ## Installation
 
 Install this project by cloning the repository, making the scripts executable
