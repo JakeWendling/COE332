@@ -28,7 +28,7 @@ To perform these functions:
 ```
 
 This should print something similar to the following:
-```bash
+```
 Average turbidity based on most recent five measurements = 1.155868 NTU
 Warning: Turbidity is above threshold for safe use
 Minimum time required to return below a safe threshold = 7.169909191009603 hours
