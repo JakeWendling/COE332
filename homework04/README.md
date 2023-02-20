@@ -35,20 +35,35 @@ To request the entire dataset:
 ```bash
 /coe/332/homework04$ curl localhost:5000
 ```
+However, it is recommended to output this data to a file instead of the terminal given its large size:
+```bash
+/coe/332/homework04$ curl localhost:5000 --output <filename>
+```
 To request the list of epochs:
 ```bash
 /coe/332/homework04$ curl localhost:5000/epochs
+```
+This will return something similar to the following:
+```bash
+["2023-048T12:00:00.000Z","2023-048T12:04:00.000Z","2023-048T12:08:00.000Z",...
 ```
 To request the positional data for a given epoch (you can copy one of the epochs given in the previous command):
 ```bash
 /coe/332/homework04$ curl localhost:5000/epochs/<epoch>
 ```
+Example usage:
+```bash
+curl localhost:5000/epochs/"2023-063T11:59:00.000Z"
+{"EPOCH":"2023-063T11:59:00.000Z","X":{"#text":"2511.5681106...
+```
+This will give the position and velocity vectors of the ISS at the given epoch.
+
 To request the speed at a given epoch:
 ```bash
 /coe/332/homework04$ curl localhost:5000/epochs/<epoch>/speed
 ```
-This should print something similar to the following:
+Example usage:
 ```bash
-
+curl localhost:5000/epochs/"2023-063T11:59:00.000Z"/speed
+7.662273068417691 km/s
 ```
-This shows the average turbidity of the last five samples (sorted by time sampled), whether the water is safe to use, and the minimum time required for the water to become safe.
