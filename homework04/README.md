@@ -50,7 +50,8 @@ This will return something similar to the following:
 ```bash
 ["2023-048T12:00:00.000Z","2023-048T12:04:00.000Z","2023-048T12:08:00.000Z",...
 ```
-To request the positional data for a given epoch (you can copy one of the epochs given in the previous command):
+#### To request the positional data for a given epoch
+you can copy one of the epochs given in the previous command:
 ```bash
 $ curl localhost:5000/epochs/<epoch>
 ```
@@ -61,7 +62,7 @@ $ curl localhost:5000/epochs/"2023-063T11:59:00.000Z"
 ```
 This will give the position and velocity vectors of the ISS at the given epoch.
 
-To request the speed at a given epoch:
+#### To request the speed at a given epoch:
 ```bash
 $ curl localhost:5000/epochs/<epoch>/speed
 ```
