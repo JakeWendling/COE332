@@ -53,7 +53,7 @@ $ curl localhost:5000/epochs/<epoch>
 ```
 Example usage:
 ```bash
-curl localhost:5000/epochs/"2023-063T11:59:00.000Z"
+$ curl localhost:5000/epochs/"2023-063T11:59:00.000Z"
 {"EPOCH":"2023-063T11:59:00.000Z","X":{"#text":"2511.5681106...
 ```
 This will give the position and velocity vectors of the ISS at the given epoch.
