@@ -2,18 +2,29 @@ import xmltodict
 import requests
 from flask import Flask
 
-app = Flask(__name__) 
+app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def getData():
+    """
+    Gets the nasa ISS location data and returns the data in dictionary format
+
+    Returns:
+        data: The ISS coordinate data in dictionary format.
+    """
     response = requests.get('https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     data = xmltodict.parse(response.text)
     return data
 
 @app.route('/epochs', methods=['GET'])
 def getEpochs():
-    response = requests.get('https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
-    data = xmltodict.parse(response.text)
+    """
+    Gets the nasa ISS location data and returns the list of epochs in dictionary format
+    
+    Returns:
+        epochs: a list of epochs(strings) for which ISS coordinate data is available.
+    """
+    data = getData()
     stateList = data['ndm']['oem']['body']['segment']['data']['stateVector']
     epochs = []
     for state in stateList:
@@ -22,8 +33,22 @@ def getEpochs():
 
 @app.route('/epochs/<epoch>', methods=['GET'])
 def getStateVector(epoch):
-    response = requests.get('https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
-    data = xmltodict.parse(response.text)
+    """
+    Gets the nasa ISS location data, 
+    then returns the state vector for a given epoch, if available. 
+    Otherwise returns an error message and error code.
+    
+    Args:
+        epoch: A string representing an epoch.
+        
+    Returns:
+        state:  The state vector for the given epoch, if available. 
+    
+    Raises:
+        If no state vector is available for the given epoch, 
+        returns an error message and a 400 status code.
+    """
+    data = getData()
     stateList = data['ndm']['oem']['body']['segment']['data']['stateVector']
     for state in stateList:
         if state['EPOCH'] == epoch:
@@ -32,8 +57,22 @@ def getStateVector(epoch):
 
 @app.route('/epochs/<epoch>/speed', methods=['GET'])
 def getSpeed(epoch):
-    response = requests.get('https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
-    data = xmltodict.parse(response.text)
+    """
+    Gets the nasa ISS location data, 
+    then returns the state vector for a given epoch, if available. 
+    Otherwise returns an error message and error code.
+    
+    Args:
+        epoch: A string representing an epoch.
+        
+    Returns:
+        speed: A float representing the speed of the ISS at the given epoch, if available. 
+
+    Raises:
+        If no speed is available for the given epoch, 
+        returns an error message and a 400 status code.
+    """
+    data = getData()
     stateList = data['ndm']['oem']['body']['segment']['data']['stateVector']
     for state in stateList:
         if state['EPOCH'] == epoch:
@@ -43,6 +82,6 @@ def getSpeed(epoch):
             speed = (x_dot**2 + y_dot**2 + z_dot**2)**.5
             return f"{str(speed)} {state['Z_DOT']['@units']}\n"
     return "Error: Epoch not found\n", 400
-    
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
