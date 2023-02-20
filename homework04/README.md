@@ -64,6 +64,6 @@ $ curl localhost:5000/epochs/<epoch>/speed
 ```
 Example usage:
 ```bash
-curl localhost:5000/epochs/"2023-063T11:59:00.000Z"/speed
+$ curl localhost:5000/epochs/"2023-063T11:59:00.000Z"/speed
 7.662273068417691 km/s
 ```
