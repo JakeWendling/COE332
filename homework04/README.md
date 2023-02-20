@@ -26,12 +26,15 @@ This code has three functions:
 
 To perform these functions:
 
-First start the flask app:
+### Starting the Flask app
+First start the Flask app:
 ```bash
 /coe332/homework04$ flask --app iss_tracker run
 ```
-Then in a separate terminal, request the data:
-To request the entire dataset:
+Then in a separate terminal, you can request the data:
+
+### Requesting Data
+#### To request the entire dataset:
 ```bash
 $ curl localhost:5000
 ```
@@ -39,7 +42,7 @@ However, it is recommended to output this data to a file instead of the terminal
 ```bash
 $ curl localhost:5000 --output <filename>
 ```
-To request the list of epochs:
+#### To request the list of epochs:
 ```bash
 $ curl localhost:5000/epochs
 ```
