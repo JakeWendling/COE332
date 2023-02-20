@@ -1,11 +1,12 @@
 import xmltodict
 import requests
+from typing import List#,String
 from flask import Flask
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
-def getData():
+def getData() -> dict:
     """
     Gets the nasa ISS location data and returns the data in dictionary format
 
@@ -17,7 +18,7 @@ def getData():
     return data
 
 @app.route('/epochs', methods=['GET'])
-def getEpochs():
+def getEpochs() -> List[str]:
     """
     Gets the nasa ISS location data and returns the list of epochs in dictionary format
     
@@ -32,7 +33,7 @@ def getEpochs():
     return epochs
 
 @app.route('/epochs/<epoch>', methods=['GET'])
-def getStateVector(epoch):
+def getStateVector(epoch: str) -> dict:
     """
     Gets the nasa ISS location data, 
     then returns the state vector for a given epoch, if available. 
@@ -53,10 +54,10 @@ def getStateVector(epoch):
     for state in stateList:
         if state['EPOCH'] == epoch:
             return state
-    return "Error: Epoch not found", 400
+    return "Error: Epoch not found\n", 400
 
 @app.route('/epochs/<epoch>/speed', methods=['GET'])
-def getSpeed(epoch):
+def getSpeed(epoch: str) -> float: 
     """
     Gets the nasa ISS location data, 
     then returns the state vector for a given epoch, if available. 
