@@ -1,6 +1,6 @@
 import xmltodict
 import requests
-from typing import List#,String
+from typing import List
 from flask import Flask
 
 app = Flask(__name__)
