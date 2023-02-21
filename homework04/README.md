@@ -1,6 +1,8 @@
 # Homework 04: ISS Position App
 
-Scenario: You have found an abundance of interesting positional and velocity data for the International Space Station (ISS). It is a challenge, however, to sift through the data manually to find what you are looking for. This Flask application is used for querying and returning interesting information from the ISS data set.
+Scenario: You have found an abundance of interesting positional and velocity data for the International Space Station (ISS). It is a challenge, however, to sift through the data manually to find what you are looking for. 
+
+This Flask application is used for querying and returning interesting information from the ISS data set. It returns the most recent position and velocity data of the ISS.
 
 The data used in this program can be found at [this link](https://spotthestation.nasa.gov/trajectory_data.cfm). This data is found in an xml file and contains a dictionary of header data and position/velocity vectors of the ISS every four minutes. It contains the date and time, X, Y, and Z, and X, Y, and Z velocities at each time (epoch).
 
