@@ -46,21 +46,31 @@ docker run -it --rm  -p 5000:5000 jakewendling/iss_tracker:hw05
 ```
 
 ### Requesting Data
-In a separate terminal, you can request the data. To load the data into the app, first run the following:
+In a separate terminal, you can request the data.
+
+To load the data into the app, run the following:
 ```bash
-$ curl -X POST localhost:5000/post-data
-$ curl -X DELETE localhost:5000/delete-data
+curl -X POST localhost:5000/post-data
+```
+This will allow the other requesting routes to function.
+
+To delete the data from the app, run the following
+```bash
+curl -X DELETE localhost:5000/delete-data
+```
+Doing this will cause all of the other requesting routes to fail.
+
 #### To request the entire dataset:
 ```bash
-$ curl localhost:5000
+curl localhost:5000
 ```
 However, it is recommended to output this data to a file instead of the terminal given its large size:
 ```bash
-$ curl localhost:5000 --output <filename>
+curl localhost:5000 --output <filename>
 ```
 #### To request the list of epochs:
 ```bash
-$ curl localhost:5000/epochs
+curl localhost:5000/epochs
 ```
 This will return something similar to the following:
 ```bash
@@ -69,21 +79,25 @@ This will return something similar to the following:
 #### To request the positional data for a given epoch:
 (you can copy one of the epochs given in the previous command)
 ```bash
-$ curl localhost:5000/epochs/<epoch>
+curl localhost:5000/epochs/<epoch>
 ```
 Example usage:
 ```bash
-$ curl localhost:5000/epochs/"2023-063T11:59:00.000Z"
-{"EPOCH":"2023-063T11:59:00.000Z","X":{"#text":"2511.5681106...
+curl localhost:5000/epochs/"2023-063T11:59:00.000Z"
 ```
 This will give the position and velocity vectors of the ISS at the given epoch.
-
+```bash
+{"EPOCH":"2023-063T11:59:00.000Z","X":{"#text":"2511.5681106...
+```
 #### To request the speed at a given epoch:
 ```bash
-$ curl localhost:5000/epochs/<epoch>/speed
+curl localhost:5000/epochs/<epoch>/speed
 ```
 Example usage:
 ```bash
-$ curl localhost:5000/epochs/"2023-063T11:59:00.000Z"/speed
+curl localhost:5000/epochs/"2023-063T11:59:00.000Z"/speed
+```
+Which gives:
+```bash
 7.662273068417691 km/s
 ```
