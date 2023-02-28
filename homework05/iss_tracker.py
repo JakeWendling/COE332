@@ -9,18 +9,18 @@ data = None
 @app.route('/help', methods=['GET'])
 def help() -> str:
     """
-    Gets the nasa ISS location data and returns the data in dictionary format
+    Returns a string that provides info about the different routes available in this flask app.
 
     Returns:
-        data: The ISS coordinate data in dictionary format.
+        helpString: a string that contains help info
     """
     helpString = ""
     helpString += 'Requesting data:\n'
     helpString += '  /                        Return entire data set\n'
     helpString += '  /epochs                  Return list of all Epochs in the data set\n'
     helpString += '  /epochs?                 Return modified list of Epochs given query parameters\n'
-    helpString += '  /   limit=int&               Limits number of epochs in the list\n'
-    helpString += '  /   offset=int               Offsets the start of the list\n'
+    helpString += '     limit=int&               Limits number of epochs in the list\n'
+    helpString += '     offset=int               Offsets the start of the list\n'
     helpString += '  /epochs/<epoch>          Return state vectors for a specific Epoch from the data set\n'
     helpString += '  /epochs/<epoch>/speed    Return instantaneous speed for a specific Epoch in the data set\n'
     helpString += '  /help                    Return help text that briefly describes each route\n'
@@ -32,10 +32,10 @@ def help() -> str:
 @app.route('/post-data', methods=['POST'])
 def postData() -> dict:
     """
-    Gets the nasa ISS location data and returns the data in dictionary format
+    Gets the nasa ISS location data and saves the data in dictionary format in the flask app.
 
     Returns:
-        data: The ISS coordinate data in dictionary format.
+        string: Message that tells the user that the data has successfuly been obtained
     """
     response = requests.get('https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     global data
@@ -45,10 +45,10 @@ def postData() -> dict:
 @app.route('/delete-data', methods=['DELETE'])
 def deleteData() -> str:
     """
-    Gets the nasa ISS location data and returns the data in dictionary format
+    Deletes the data stored in the flask app
 
     Returns:
-        data: The ISS coordinate data in dictionary format.
+        string: success message
     """
     global data
     data = None
@@ -72,6 +72,9 @@ def getEpochs() -> List[str]:
     """
     Gets the nasa ISS location data and returns the list of epochs in dictionary format
     
+    Parameters:
+        offset: (int) Offsets list start by this amount
+        limit: (int) limits the length of the list to this amount
     Returns:
         epochs: a list of epochs(strings) for which ISS coordinate data is available.
     """
