@@ -63,6 +63,8 @@ def getData() -> dict:
         data: The ISS coordinate data in dictionary format.
     """
     global data
+    if not data:
+        return "Data not found\n", 400
     return data
 
 @app.route('/epochs', methods=['GET'])
@@ -75,7 +77,7 @@ def getEpochs() -> List[str]:
     """
     global data
     if not data:
-        return "Data not found\n"
+        return "Data not found\n", 400
     stateList = data['ndm']['oem']['body']['segment']['data']['stateVector']
     
     offset = request.args.get('offset', 0)
@@ -117,7 +119,7 @@ def getStateVector(epoch: str) -> dict:
     """
     global data
     if not data:
-        return "Data not found\n"
+        return "Data not found\n", 400
     stateList = data['ndm']['oem']['body']['segment']['data']['stateVector']
     for state in stateList:
         if state['EPOCH'] == epoch:
@@ -143,7 +145,7 @@ def getSpeed(epoch: str) -> float:
     """
     global data
     if not data:
-        return "Data not found\n"
+        return "Data not found\n", 400
     stateList = data['ndm']['oem']['body']['segment']['data']['stateVector']
     for state in stateList:
         if state['EPOCH'] == epoch:
