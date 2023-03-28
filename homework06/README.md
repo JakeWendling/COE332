@@ -89,3 +89,8 @@ This will give the following.
 	    ],
 	    ...
 ```
+##Turning Off the Application
+To turn off the application enter the following:
+```bash
+docker-compose stop
+```
