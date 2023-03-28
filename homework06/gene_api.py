@@ -1,10 +1,13 @@
-import xmltodict
 import requests
+import redis
+import json
 from typing import List
 from flask import Flask, request
 
 app = Flask(__name__)
-data = None
+
+def get_redis_client():
+    return redis.Redis(host='redis-db', port=6379, db=0, decode_responses=True)
 
 @app.route('/data', methods=['POST'])
 def postData() -> dict:
@@ -15,20 +18,25 @@ def postData() -> dict:
         string: Message that tells the user that the data has successfuly been obtained
     """
     response = requests.get('https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json')
-    global data
-    data = xmltodict.parse(response.text)
-    return "Data reloaded\n"
+    rd = get_redis_client()
+    data = response.json()
+    geneList = data['response']['docs']
+    
+    for gene in geneList:
+        rd.hset('data', gene['hgnc_id'], json.dumps(gene))
+    return "Data loaded\n"
 
 @app.route('/data', methods=['DELETE'])
 def deleteData() -> str:
     """
-    Deletes the data stored in the flask app
+    Deletes the data stored in the redis db
 
     Returns:
         string: success message
     """
-    global data
-    data = None
+    
+    rd = get_redis_client()
+    rd.flushall()
     return "Data deleted\n"
 
 @app.route('/data', methods=['GET'])
@@ -39,9 +47,12 @@ def getData() -> dict:
     Returns:
         data: The stored data in dictionary format.
     """
-    global data
-    if not data:
-        return "Data not found\n", 400
+    rd = get_redis_client()
+    data = []
+    for key in rd.hgetall('data'):
+        data.append(json.loads(rd.hget('data', key)))
+    #if data == "":
+    #    return "Data not found\n", 400
     return data
 
 @app.route('/genes', methods=['GET'])
@@ -52,15 +63,11 @@ def getGenes() -> List[str]:
     Returns:
         idList: a list of id's of genes(strings) for which gene data is available.
     """
-    global data
-    if not data:
-        return "Data not found\n", 400
-    geneList = data['respsonse']['docs']
-
-    idList = []
-    for gene in geneList:
-        idList.append(geneList['hgnc_ids'])
-    return idList
+    #if not data:
+    #    return "Data not found\n", 400
+    #geneList = data['response']['docs']
+    rd = get_redis_client()
+    return rd.hkeys('data')
 
 @app.route('/genes/<hgnc_id>', methods=['GET'])
 def getGene(hgnc_id: str) -> dict:
@@ -79,11 +86,9 @@ def getGene(hgnc_id: str) -> dict:
         If no gene data is available for the given gene id, 
         returns an error message and a 400 status code.
     """
-    global data
-    if not data:
-        return "Data not found\n", 400
-    geneList = data['respsonse']['docs']
-    for state in stateList:
+    rd = get_redis_client()
+    for key in rd.hgetall('data'):
+        gene = json.loads(rd.hget('data', key))
         if gene['hgnc_id'] == hgnc_id:
             return gene
     return "Error: Gene not found\n", 400
