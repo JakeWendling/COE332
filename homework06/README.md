@@ -79,7 +79,7 @@ Example usage:
 ```bash
 curl localhost:5000/genes/"HGNC:5"
 ```
-This will give the following.
+This will give the following:
 ```bash
 {
   "_version_": 1761544680491712512,
@@ -89,6 +89,7 @@ This will give the following.
 	    ],
 	    ...
 ```
+
 ##Turning Off the Application
 To turn off the application enter the following:
 ```bash
