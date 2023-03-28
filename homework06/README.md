@@ -44,6 +44,7 @@ First start both applications using docker-compose:
 docker-compose up -d
 ```
 This starts two containers, one for the Flask application, and one for the Redis database.
+When running this for the first time, it will take a few minutes to download the data. Once this is done, the following commands will work.
 
 ### Requesting Data
 Then, you can request the data.

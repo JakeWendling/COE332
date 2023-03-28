@@ -87,12 +87,15 @@ def getGene(hgnc_id: str) -> dict:
         returns an error message and a 400 status code.
     """
     rd = get_redis_client()
-    for key in rd.hgetall('data'):
+    for key in rd.hkeys('data'):
         gene = json.loads(rd.hget('data', key))
         if gene['hgnc_id'] == hgnc_id:
             return gene
     return "Error: Gene not found\n", 400
 
 if __name__ == '__main__':
+    rd = get_redis_client()
+    if rd.hkeys('data') == []:
+        postData()
     app.run(debug=True, host='0.0.0.0')
     
