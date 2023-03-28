@@ -4,7 +4,7 @@ The Human Genome Organization (HUGO) is a non-profit which oversees the HUGO Gen
 
 This Flask application is used for querying, storing, and returning information from the HGNC Gene data set. 
 
-The data used in this program can be found at [this link](https://www.genenames.org/download/archive/). This data is found in an json file and contains a dictionary of data for thousands of different genes. 
+The data used in this program can be found at [this link](https://www.genenames.org/download/archive/). This data is found in an json file and contains a dictionary of data for thousands of different genes. It contains data such as, gene symbols, names, aliases, families, and more. An extended description of the data can be found in the above link.
 
 ## Installation
 
