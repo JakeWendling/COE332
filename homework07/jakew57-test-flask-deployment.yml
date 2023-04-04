@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jakew57-test-flask-deployment
+  labels:
+    app: jakew57-test-flask
+    username: jakew57
+    env: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jakew57-test-flask
+      username: jakew57
+      env: test
+  template:
+    metadata:
+      labels:
+        app: jakew57-test-flask
+        username: jakew57
+        env: test
+    spec:
+      containers:
+        - name: jakew57-test-flask
+          imagePullPolicy: Always
+          image: jakewendling/gene_app:hw6
+          ports:
+          - name: http
+            containerPort: 5000
