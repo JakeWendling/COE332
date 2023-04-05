@@ -7,7 +7,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 def get_redis_client():
-    return redis.Redis(host='redis-db', port=6379, db=0, decode_responses=True)
+    return redis.Redis(host='jakew57-test-redis-service', port=6379, db=0, decode_responses=True)
 
 @app.route('/data', methods=['POST'])
 def postData() -> dict:
