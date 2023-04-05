@@ -24,7 +24,7 @@ spec:
       containers:
         - name: jakew57-test-flask
           imagePullPolicy: Always
-          image: jakewendling/gene_app:hw6
+          image: jakewendling/gene_app:hw7
           ports:
           - name: http
             containerPort: 5000
