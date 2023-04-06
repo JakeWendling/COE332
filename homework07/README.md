@@ -54,6 +54,9 @@ First start both applications by adding their services to kubernetes:
 ```bash
 kubectl apply -f jakew57-test-redis-service.yml
 kubectl apply -f jakew57-test-flask-service.yml
+kubectl apply -f jakew57-test-flask-deployment.yml
+kubectl apply -f jakew57-test-redis-deployment.yml
+kubectl apply -f jakew57-test-redis-pvc.yml
 kubectl apply -f python-debug-deployment.yml
 ```
 
