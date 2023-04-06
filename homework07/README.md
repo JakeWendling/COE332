@@ -32,8 +32,12 @@ To build your own image, you will need to create a [Docker Hub](https://hub.dock
 docker build . -t <docker_hub_username>/gene_app:hw07
 ```
 4. In the "...-flask-deployment.yml" file, change the image from "jakewendling/gene_app:hw07" to your docker image name: "<docker_hub_username>/gene_app:hw07"
-5. In the gene_app.py file, in the "get_redis" function, change "jakew57-test-redis-service" to your username: "<username>-test-redis-service"
-6. In all future steps, use your username instead of "jakew57"
+5. Once the Docker Image is created, enter the following command to upload it to docker hub for the service to use.
+```
+docker push
+```
+6. In the gene_app.py file, in the "get_redis" function, change "jakew57-test-redis-service" to your username: "<username>-test-redis-service"
+7. In all future steps, use your username instead of "jakew57"
 
 ## Running the Code
 
@@ -50,6 +54,7 @@ First start both applications by adding their services to kubernetes:
 ```bash
 kubectl apply -f jakew57-test-redis-service.yml
 kubectl apply -f jakew57-test-flask-service.yml
+kubectl apply -f python-debug-deployment.yml
 ```
 
 This starts two kubernetes services, one for the Flask application, and one for the Redis database.
@@ -60,17 +65,12 @@ Requesting data requires the user to enter a terminal inside a kubernetes pod.
 
 To enter the pod:
 ```bash
-kubectl exec -it -f jakew57-test-flask-deployment.yml -- /bin/bash
+kubectl exec -it -f python-debug-deployment.yml -- /bin/bash
 ```
 
 You should now see something like the following:
 ```bash
-root@jakew57-test-flask-deployment-5486696bcd-l6887:/#
-```
-
-When you are finished you can exit the pod:
-```
-exit
+root@python-debug-deployment-5486696bcd-l6887:/#
 ```
 
 Now you can run the following commands:
@@ -126,8 +126,15 @@ This will give the following:
 ```
 
 ## Turning Off the Application:
-To turn off the application enter the following:
+
+When you are finished with this application you can exit the pod:
+```
+exit
+```
+
+To turn off the application, enter the following:
 ```bash
 kubectl delete service jakew57-test-flask-service
 kubectl delete service jakew57-test-redis-service
+kubectl delete deployment py-debug-deployment
 ```
