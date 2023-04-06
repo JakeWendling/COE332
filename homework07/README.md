@@ -139,5 +139,12 @@ To turn off the application, enter the following:
 ```bash
 kubectl delete service jakew57-test-flask-service
 kubectl delete service jakew57-test-redis-service
+kubectl delete deployment jakew57-test-flask-deployment
+kubectl delete deployment jakew57-test-redis-deployment
 kubectl delete deployment py-debug-deployment
+```
+
+To remove the data storage:
+```
+kubectl delete pvc jakew57-test-redis-pvc
 ```
