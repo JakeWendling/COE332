@@ -20,14 +20,20 @@ cd homework07
 You have the option of using a prebuilt container, or creating your own.
 
 ### Using the Prebuilt Container
-By default, this app automatically pulls the prebuilt Docker Image to run the Flask app.
+By default, this app automatically pulls the prebuilt Docker Image from Docker Hub to run the Flask app.
 
 ### Building a Docker image using the Dockerfile
-Enter the following to build the container using the Dockerfile contained in this repository:
+To build your own image, you will need to create a [Docker Hub](https://hub.docker.com/) account and push your own Docker Image.
 
-```bash
-docker build . -t jakewendling/gene_app:hw07
+1. First modify the .yml files in this folder by replacing all instances of "jakew57" with your own username.
+2. Change the name of all the .yml files from "jakew57-..." to "<username>-..."
+3. Enter the following to build the container using the Dockerfile contained in this repository:
 ```
+docker build . -t <docker_hub_username>/gene_app:hw07
+```
+4. In the "...-flask-deployment.yml" file, change the image from "jakewendling/gene_app:hw07" to your docker image name: "<docker_hub_username>/gene_app:hw07"
+5. In the gene_app.py file, in the "get_redis" function, change "jakew57-test-redis-service" to your username: "<username>-test-redis-service"
+6. In all future steps, use your username instead of "jakew57"
 
 ## Running the Code
 
@@ -46,7 +52,7 @@ kubectl apply -f jakew57-test-redis-service.yml
 kubectl apply -f jakew57-test-flask-service.yml
 ```
 
-This starts two containers, one for the Flask application, and one for the Redis database.
+This starts two kubernetes services, one for the Flask application, and one for the Redis database.
 When running this for the first time, it will take a few minutes to download the data. Once this is done, the following commands will work.
 
 ### Requesting Data
@@ -62,7 +68,7 @@ You should now see something like the following:
 root@jakew57-test-flask-deployment-5486696bcd-l6887:/#
 ```
 
-To exit the pod:
+When you are finished you can exit the pod:
 ```
 exit
 ```
@@ -72,7 +78,7 @@ Now you can run the following commands:
 ### Commands
 
 To load the data into the app, run the following:
-```bash
+```
 curl -X POST jakew57-test-flask-service:5000/data
 ```
 
