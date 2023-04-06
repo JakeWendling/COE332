@@ -1,4 +1,4 @@
-# Homework 06: Gene Data App Container
+# Homework 07: Gene Data App Service
 
 The Human Genome Organization (HUGO) is a non-profit which oversees the HUGO Gene Nomenclature Committee (HGNC). 
 
@@ -13,22 +13,22 @@ Install this project by cloning the repository and creating a folder to store da
 ```bash
 git clone https://github.com/JakeWendling/COE332.git
 cd COE332
-cd homework06
-mkdir data
+cd homework07
 ```
+
 ## Creating the Docker Container
 You have the option of using a prebuilt container, or creating your own.
 
-### Using the prebuilt container
-Enter the following to pull and run the prebuilt container:
-```bash
-docker pull jakewendling/gene_app:hw06
-```
+### Using the Prebuilt Container
+By default, this app automatically pulls the prebuilt Docker Image to run the Flask app.
+
 ### Building a Docker image using the Dockerfile
 Enter the following to build the container using the Dockerfile contained in this repository:
+
 ```bash
-docker build . -t jakewendling/gene_app:hw06
+docker build . -t jakewendling/gene_app:hw07
 ```
+
 ## Running the Code
 
 This code has several functions:
@@ -39,48 +39,75 @@ This code has several functions:
 To perform these functions:
 
 ### Starting the Flask app and the Redis Database
-First start both applications using docker-compose:
+First start both applications by adding their services to kubernetes:
+
 ```bash
-docker-compose up -d
+kubectl apply -f jakew57-test-redis-service.yml
+kubectl apply -f jakew57-test-flask-service.yml
 ```
+
 This starts two containers, one for the Flask application, and one for the Redis database.
 When running this for the first time, it will take a few minutes to download the data. Once this is done, the following commands will work.
 
 ### Requesting Data
-Then, you can request the data.
+Requesting data requires the user to enter a terminal inside a kubernetes pod.
+
+To enter the pod:
+```bash
+kubectl exec -it -f jakew57-test-flask-deployment.yml -- /bin/bash
+```
+
+You should now see something like the following:
+```bash
+root@jakew57-test-flask-deployment-5486696bcd-l6887:/#
+```
+
+To exit the pod:
+```
+exit
+```
+
+Now you can run the following commands:
+
+### Commands
 
 To load the data into the app, run the following:
 ```bash
-curl -X POST localhost:5000/data
+curl -X POST jakew57-test-flask-service:5000/data
 ```
 
 To delete the data from the app, run the following
 ```bash
-curl -X DELETE localhost:5000/data
+curl -X DELETE jakew57-test-flask-service:5000/data
 ```
+
 Doing this will cause all of the other requesting routes to fail.
 
 #### To request the entire dataset:
 ```bash
-curl localhost:5000/data
+curl jakew57-test-flask-service:5000/data
 ```
+
 #### To request the list of genes:
 ```bash
-curl localhost:5000/genes
+curl jakew57-test-flask-service:5000/genes
 ```
 This will return something similar to the following:
 ```bash
 ["HGNC:2341","HGNC:5",...
 ```
+
 #### To request the data for a specific gene:
 (you can copy one of the genes given in the previous command)
-```bash
-curl localhost:5000/genes/<gene>
 ```
+curl jakew57-test-flask-service:5000/genes/<gene>
+```
+
 Example usage:
 ```bash
-curl localhost:5000/genes/"HGNC:5"
+curl jakew57-test-flask-service:5000/genes/"HGNC:5"
 ```
+
 This will give the following:
 ```bash
 {
@@ -95,5 +122,6 @@ This will give the following:
 ## Turning Off the Application:
 To turn off the application enter the following:
 ```bash
-docker-compose stop
+kubectl delete service jakew57-test-flask-service
+kubectl delete service jakew57-test-redis-service
 ```
