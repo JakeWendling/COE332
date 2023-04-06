@@ -26,7 +26,7 @@ By default, this app automatically pulls the prebuilt Docker Image from Docker H
 To build your own image, you will need to create a [Docker Hub](https://hub.docker.com/) account and push your own Docker Image.
 
 1. First modify the .yml files in this folder by replacing all instances of "jakew57" with your own username.
-2. Change the name of all the .yml files from "jakew57-..." to "<username>-..."
+2. Change the name of all the "jakew57...yml" files from "jakew57-..." to "<username>-..."
 3. Enter the following to build the container using the Dockerfile contained in this repository:
 ```
 docker build . -t <docker_hub_username>/gene_app:hw07
@@ -36,7 +36,7 @@ docker build . -t <docker_hub_username>/gene_app:hw07
 ```
 docker push
 ```
-6. In the gene_app.py file, in the "get_redis" function, change "jakew57-test-redis-service" to your username: "<username>-test-redis-service"
+6. In the gene_api.py file, in the "get_redis_client" function, change host="jakew57-test-redis-service" to your username: host="<username>-test-redis-service"
 7. In all future steps, use your username instead of "jakew57"
 
 ## Running the Code
