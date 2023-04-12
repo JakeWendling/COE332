@@ -4,15 +4,50 @@ import json
 from typing import List
 from flask import Flask, request
 import os
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
-def get_redis_client():
+def get_redis_client(db=0):
     redis_ip = os.environ.get('REDIS_IP')
     if not redis_ip:
         raise Exception()
-    rd=redis.Redis(host=redis_ip, port=6379, db=0)
-    return redis.Redis(host=redis_ip, port=6379, db=0, decode_responses=True)
+    rd = redis.Redis(host=redis_ip, port=6379, db=db, decode_responses=True)
+    return rd
+
+@app.route('/image', methods=['GET'])
+def getImage() -> dict:
+    path = './plot.png'
+    rd = get_redis_client(1)
+    with open(path, 'wb') as f:
+        f.write(rd.get('image'))
+    return send_file(path, mimetype='image/png', as_attachment=True)
+    #return 'imaged'
+
+@app.route('/image', methods=['POST'])
+def postImage() -> dict:
+    """
+    """
+    redis_genes = get_redis_client(0)
+    redis_image = get_redis_client(1)
+
+    graph_data = {}
+    for gene in redis_genes.hkeys('data'):
+        gene_data = json.loads(redis_genes.hget('data', gene))
+        locus_group = gene_data['locus_group']
+        if locus_group in graph_data:
+            graph_data[locus_group] += 1
+        else:
+            graph_data[locus_group] = 1
+  
+    plt.bar(graph_data.keys(),graph_data.values())
+    plt.savefig('plot.png')
+    file_bytes = open('plot.png', 'rb').read()
+    redis_image.set('image', file_bytes)
+    
+    return 'Image saved to database\n'
+
+
 
 @app.route('/data', methods=['POST'])
 def postData() -> dict:
