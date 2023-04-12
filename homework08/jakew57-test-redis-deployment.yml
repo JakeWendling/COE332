@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jakew57-test-redis-deployment
+  labels:
+    app: jakew57-test-redis
+    username: jakew57
+    env: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jakew57-test-redis
+      username: jakew57
+      env: test
+  template:
+    metadata:
+      labels:
+        app: jakew57-test-redis
+        username: jakew57
+        env: test
+    spec:
+      containers:
+        - name: jakew57-test-redis
+          imagePullPolicy: Always
+          image: redis:7
+          ports:
+          - name: http
+            containerPort: 6379
+          volumeMounts:
+          - name: jakew57-test-redis-pvc
+            mountPath: "/data"
+      volumes:
+       - name: jakew57-test-redis-pvc
+         persistentVolumeClaim:
+           claimName: jakew57-test-redis-pvc
