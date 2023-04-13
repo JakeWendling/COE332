@@ -2,35 +2,72 @@ import requests
 import redis
 import json
 from typing import List
-from flask import Flask, request
+from flask import Flask, request, send_file
 import os
 import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
-def get_redis_client(db=0):
+def get_redis_client(db=0, decode=True):
+    """
+    Gives the redis db object
+    
+    Args:
+        db: (int) database index/page
+        decode: (bool) whether to decode byte responses to str
+    
+    Returns:
+        rd: redis object
+    """
     redis_ip = os.environ.get('REDIS_IP')
     if not redis_ip:
         raise Exception()
-    rd = redis.Redis(host=redis_ip, port=6379, db=db, decode_responses=True)
+    rd = redis.Redis(host=redis_ip, port=6379, db=db, decode_responses=decode)
     return rd
 
+@app.route('/image', methods=['DELETE'])
+def deleteImage() -> dict:
+    """
+    Deletes the image stored in the redis db
+
+    Returns:
+        string: success message
+    """
+    rd = get_redis_client(1, False)
+    if rd.keys() == []:
+        return 'Error, no image exists in the database', 400
+    rd.delete('image')
+    return 'Image deleted from database\n'
+
 @app.route('/image', methods=['GET'])
-def getImage() -> dict:
-    path = './plot.png'
-    rd = get_redis_client(1)
-    with open(path, 'wb') as f:
-        f.write(rd.get('image'))
-    return send_file(path, mimetype='image/png', as_attachment=True)
-    #return 'imaged'
+def getImage() -> bytes:
+    """
+    Gets the image stored in the redis db
+
+    Returns:
+        image: plot image as bytes
+    """
+    rd = get_redis_client(1, False)
+    if rd.keys() == []:
+        return 'Error, no image exists in the database', 400
+    image = rd.get('image')
+    return image
+    #return send_file(image, mimetype='image/png', as_attachment=True, download_name='plot.png')
 
 @app.route('/image', methods=['POST'])
-def postImage() -> dict:
+def postImage() -> tuple:
     """
+    Creates a plot of the locus groups of the gene data and stores the image in redis 
+
+    Returns:
+        string: success message
     """
     redis_genes = get_redis_client(0)
-    redis_image = get_redis_client(1)
+    redis_image = get_redis_client(1, False)
 
+    if redis_genes.hkeys('data') == []:
+        return 'Error, data has not been loaded into the database', 400
+    
     graph_data = {}
     for gene in redis_genes.hkeys('data'):
         gene_data = json.loads(redis_genes.hget('data', gene))
@@ -39,15 +76,16 @@ def postImage() -> dict:
             graph_data[locus_group] += 1
         else:
             graph_data[locus_group] = 1
-  
+    
     plt.bar(graph_data.keys(),graph_data.values())
+    plt.ylabel('Count')
+    plt.title('Counts of Locus Groups in HGNC Gene Data')
+    plt.xticks(rotation = 15)
     plt.savefig('plot.png')
     file_bytes = open('plot.png', 'rb').read()
     redis_image.set('image', file_bytes)
     
     return 'Image saved to database\n'
-
-
 
 @app.route('/data', methods=['POST'])
 def postData() -> dict:
