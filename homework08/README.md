@@ -1,4 +1,4 @@
-# Homework 07: Gene Data App Service
+# Homework 08: Gene Data App Service
 
 The Human Genome Organization (HUGO) is a non-profit which oversees the HUGO Gene Nomenclature Committee (HGNC). 
 
@@ -13,7 +13,7 @@ Install this project by cloning the repository and creating a folder to store da
 ```bash
 git clone https://github.com/JakeWendling/COE332.git
 cd COE332
-cd homework07
+cd homework08
 ```
 
 ## Creating the Docker Container
@@ -45,6 +45,7 @@ This code has several functions:
 1. Return the entire data set in dictionary format.
 2. Return a list of the genes availble.
 3. Return a dictionary of gene data for a specific gene.
+4. Return a graph of certain data.
 
 To perform these functions:
 
@@ -126,6 +127,39 @@ This will give the following:
           "CCDS12976"
 	    ],
 	    ...
+```
+
+#### To request a bar graph of the locus groups:
+```
+curl -X POST jakew57-test-flask-service:5000/image
+```
+Then you can download the image into the python pod:
+```
+curl jakew57-test-flask-service:5000/image
+```
+Copy the name of the pod from the prompt:
+```
+root@<pod_name>:/#
+```
+For example:
+```
+root@py-debug-deployment-f484b4b99-xtfsc:/#
+py-debug-deployment-f484b4b99-xtfsc
+```
+Then you can download the image onto your machine after exiting the pod:
+```
+exit
+kubectl cp <pod_name>:plot.png ./plot.png 
+```
+For example:
+```
+kubectl cp py-debug-deployment-f484b4b99-xtfsc:plot.png ./plot.png
+```
+You can now view the graph on your computer.
+
+To remove the image from the redis database:
+```
+curl -X DELETE jakew57-test-flask-service:5000/image
 ```
 
 ## Turning Off the Application:

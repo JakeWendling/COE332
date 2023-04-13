@@ -8,9 +8,6 @@ metadata:
     username: jakew57
     env: test
 spec:
-  env:
-    - name: REDIS_IP
-      value: jakew57-test-redis-service
   replicas: 2
   selector:
     matchLabels:
@@ -27,7 +24,10 @@ spec:
       containers:
         - name: jakew57-test-flask
           imagePullPolicy: Always
-          image: jakewendling/gene_app:hw7
+          image: jakewendling/gene_app:hw8
           ports:
           - name: http
             containerPort: 5000
+          env:
+            - name: REDIS_IP
+              value: jakew57-test-redis-service
