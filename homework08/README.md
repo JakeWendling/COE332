@@ -135,8 +135,17 @@ curl -X POST jakew57-test-flask-service:5000/image
 ```
 Then you can download the image into the python pod:
 ```
-curl jakew57-test-flask-service:5000/image
+curl jakew57-test-flask-service:5000/image --output plot.png
 ```
+This should return something similar to:
+```
+ % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current Dload  Upload   Total   Spent    Left  Speed
+100 29723  100 29723    0     0  3628k      0 --:--:-- --:--:-- --:--:-- 3628k
+```
+If the total value is not 29723 or something close, the program has thrown an error and saved it in the file.
+This means that you must first load the data or create the image first. To check, read the plot.png file.
+
+
 Copy the name of the pod from the prompt:
 ```
 root@<pod_name>:/#

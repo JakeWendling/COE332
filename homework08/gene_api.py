@@ -21,7 +21,7 @@ def get_redis_client(db=0, decode=True):
     """
     redis_ip = os.environ.get('REDIS_IP')
     if not redis_ip:
-        raise Exception()
+        raise Exception('Error: Ip not found')
     rd = redis.Redis(host=redis_ip, port=6379, db=db, decode_responses=decode)
     return rd
 
@@ -35,7 +35,7 @@ def deleteImage() -> dict:
     """
     rd = get_redis_client(1, False)
     if rd.keys() == []:
-        return 'Error, no image exists in the database', 400
+        return 'Error, no image exists in the database\n', 400
     rd.delete('image')
     return 'Image deleted from database\n'
 
@@ -49,7 +49,7 @@ def getImage() -> bytes:
     """
     rd = get_redis_client(1, False)
     if rd.keys() == []:
-        return 'Error, no image exists in the database', 400
+        raise Exception('Error: no image exists in the database')
     image = rd.get('image')
     return image
     #return send_file(image, mimetype='image/png', as_attachment=True, download_name='plot.png')
@@ -66,7 +66,7 @@ def postImage() -> tuple:
     redis_image = get_redis_client(1, False)
 
     if redis_genes.hkeys('data') == []:
-        return 'Error, data has not been loaded into the database', 400
+        return 'Error, data has not been loaded into the database\n', 400
     
     graph_data = {}
     for gene in redis_genes.hkeys('data'):
